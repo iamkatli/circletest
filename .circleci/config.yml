@@ -32,12 +32,14 @@ jobs:
           name: Load archived Docker image
           command: docker load -i /tmp/workspace/image.tar
       - run:
+          name: run the docker
+            docker run $IMAGE_NAME "Hello!"
+      - run:
           name: download scannercli and change permission
           command: |
             wget https://raw.githubusercontent.com/iamkatli/circletest/master/scannercli
             chmod +x scannercli
-            docker run $IMAGE_NAME "Hello!"
-#sudo -i ./scannercli scan --local --dockerless -U administrator -P password -H http://18.138.176.254:8080 $IMAGE_NAME
+            ./scannercli scan --local --dockerless -U administrator -P password -H http://18.138.176.254:8080 --registry "Docker Hub" $IMAGE_NAME
   publish-latest:
     executor: docker-publisher
     steps:
