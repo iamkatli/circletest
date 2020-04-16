@@ -34,10 +34,10 @@ jobs:
       - run:
           name: download scannercli and change permission
           command: |
-            docker images
+            docker run $IMAGE_NAME "hello"
             wget https://raw.githubusercontent.com/iamkatli/circletest/master/scannercli
             chmod +x scannercli
-            ./scannercli scan --local -U administrator -P password -H http://18.138.176.254:8080 circletest
+            ./scannercli scan --local -U administrator -P password -H http://18.138.176.254:8080 $IMAGE_NAME
   publish-latest:
     executor: docker-publisher
     steps:
