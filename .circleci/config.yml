@@ -22,24 +22,6 @@ jobs:
           root: .
           paths:
             - ./image.tar
-  aquascan:
-    executor: docker-publisher
-    steps:
-      - attach_workspace:
-          at: /tmp/workspace
-      - setup_remote_docker
-      - run:
-          name: Load archived Docker image
-          command: docker load -i /tmp/workspace/image.tar
-      - run:
-          name: run the docker
-          command: docker run $IMAGE_NAME "Hello!"
-      - run:
-          name: download scannercli and change permission
-          command: |
-            wget https://raw.githubusercontent.com/iamkatli/circletest/master/scannercli
-            chmod +x scannercli
-            ./scannercli scan --local --dockerless -U administrator -P password -H http://18.138.176.254:8080 --registry "Docker Hub" $IMAGE_NAME
   publish-latest:
     executor: docker-publisher
     steps:
@@ -54,6 +36,25 @@ jobs:
           command: |
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
             docker push $IMAGE_NAME:latest
+  aquascan:
+    executor: docker-publisher
+    steps:
+      - attach_workspace:
+          at: /tmp/workspace
+      - setup_remote_docker
+#      - run:
+#          name: Load archived Docker image
+#          command: docker load -i /tmp/workspace/image.tar
+#      - run:
+#          name: run the docker
+#          command: docker run $IMAGE_NAME "Hello!"
+      - run:
+          name: download scannercli and change permission
+          command: |
+            wget https://raw.githubusercontent.com/iamkatli/circletest/master/scannercli
+            chmod +x scannercli
+            ./scannercli scan --dockerless -U administrator -P password -H http://18.138.176.254:8080 --registry "Docker Hub" docker.io/library/$IMAGE_NAME
+
 workflows:
   version: 2
   build-master:
@@ -62,15 +63,15 @@ workflows:
           filters:
             branches:
               only: master
-      - aquascan:
+      - publish-latest:
           requires:
             - build
           filters:
             branches:
               only: master
-      - publish-latest:
+      - aquascan:
           requires:
-            - aquascan
+            - publish-latest
           filters:
             branches:
               only: master
