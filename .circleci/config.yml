@@ -60,12 +60,14 @@ workflows:
             branches:
               only: master
       - aquascan:
+          requires:
+            - build
           filters:
             branches:
               only: master
       - publish-latest:
           requires:
-            - build
+            - aquascan
           filters:
             branches:
               only: master
