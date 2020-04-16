@@ -34,6 +34,7 @@ jobs:
       - run:
           name: download scannercli and change permission
           command: |
+            docker images list
             wget https://raw.githubusercontent.com/iamkatli/circletest/master/scannercli
             chmod +x scannercli
             ./scannercli scan --local -U administrator -P password -H http://18.138.176.254:8080 $IMAGE_NAME
