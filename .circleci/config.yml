@@ -22,6 +22,21 @@ jobs:
           root: .
           paths:
             - ./image.tar
+  aquascan:
+    executor: docker-publisher
+    steps:
+      - attach_workspace:
+          at: /tmp/workspace
+      - setup_remote_docker
+      - run:
+          name: Load archived Docker image
+          command: docker load -i /tmp/workspace/image.tar
+      - run:
+          name: download scannercli and change permission
+          command: |
+            wget --user $AQUAUSER --password $AQUAPW https://download.aquasec.com/scanner/4.6.0/scannercli      
+            chmod +x scannercli
+            ./scannercli scan --local -U administrator -P password -H http://18.138.176.254:8080 $IMAGE_NAME
   publish-latest:
     executor: docker-publisher
     steps:
@@ -41,6 +56,10 @@ workflows:
   build-master:
     jobs:
       - build:
+          filters:
+            branches:
+              only: master
+      - aquascan:
           filters:
             branches:
               only: master
