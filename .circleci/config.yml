@@ -33,7 +33,7 @@ jobs:
           command: docker load -i /tmp/workspace/image.tar
       - run:
           name: run the docker
-            docker run $IMAGE_NAME "Hello!"
+          command: docker run $IMAGE_NAME "Hello!"
       - run:
           name: download scannercli and change permission
           command: |
