@@ -36,7 +36,8 @@ jobs:
           command: |
             wget https://raw.githubusercontent.com/iamkatli/circletest/master/scannercli
             chmod +x scannercli
-            sudo -i ./scannercli scan --local --dockerless -U administrator -P password -H http://18.138.176.254:8080 $IMAGE_NAME
+            docker run $IMAGE_NAME "Hello!"
+#sudo -i ./scannercli scan --local --dockerless -U administrator -P password -H http://18.138.176.254:8080 $IMAGE_NAME
   publish-latest:
     executor: docker-publisher
     steps:
