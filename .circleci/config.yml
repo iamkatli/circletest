@@ -53,7 +53,7 @@ jobs:
           command: |
             wget https://raw.githubusercontent.com/iamkatli/circletest/master/scannercli
             chmod +x scannercli
-            ./scannercli scan --dockerless -U administrator -P password -H https://18.138.176.254 --registry "Docker Hub" docker.io/library/$IMAGE_NAME
+            ./scannercli scan --dockerless -U administrator -P password -H http://18.138.176.254:8080 --registry "Docker Hub" docker.io/library/$IMAGE_NAME
 workflows:
   version: 2
   build-master:
